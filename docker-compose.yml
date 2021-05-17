@@ -1,0 +1,35 @@
+version: "3.7"
+services:
+  server:
+    build: server/
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/test?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+  db:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_DATABASE: test
+      MYSQL_USER: server
+      MYSQL_PASSWORD: qwerty
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend
+
+volumes:
+  db-data:
+
+networks:
+  backend:
